@@ -5,6 +5,7 @@ export default class ImageGallery extends Component {
   state = {
     query: '',
     hits: [],
+    loading: false,
   };
 
   componentDidUpdate(prevProps, prevState) {
