@@ -21,15 +21,11 @@ export default class ImageGallery extends Component {
     if (prevQuery !== currentQuery) {
       this.setState({ status: 'pending' });
 
-      setInterval(() => {
-        fetch(
-          `https://pixabay.com/api/?q=${currentQuery}&page=1&key=${API_KEY}&image_type=photo&orientation=horizontal&per_page=12`
-        )
-          .then(res => res.json())
-          .then(query =>
-            this.setState({ hits: query.hits, status: 'resolved' })
-          );
-      }, 1500);
+      fetch(
+        `https://pixabay.com/api/?q=${currentQuery}&page=1&key=${API_KEY}&image_type=photo&orientation=horizontal&per_page=12`
+      )
+        .then(res => res.json())
+        .then(query => this.setState({ hits: query.hits, status: 'resolved' }));
     }
   }
 
