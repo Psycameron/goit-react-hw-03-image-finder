@@ -1,6 +1,8 @@
 import ImageGalleryItem from 'components/ImageGalleryItem/ImageGalleryItem';
 import { Component } from 'react';
 
+import css from './ImageGallery.module.css';
+
 export default class ImageGallery extends Component {
   state = {
     query: '',
@@ -43,8 +45,7 @@ export default class ImageGallery extends Component {
 
     if (status === 'resolved') {
       return (
-        <ul className="gallery">
-          Gallery
+        <ul className={css.ImageGallery}>
           <ImageGalleryItem hits={this.state.hits} />
         </ul>
       );
