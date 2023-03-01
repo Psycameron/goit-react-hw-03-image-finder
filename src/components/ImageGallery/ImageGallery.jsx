@@ -5,7 +5,7 @@ export default class ImageGallery extends Component {
   state = {
     query: '',
     hits: [],
-    loading: false,
+    status: 'idle',
   };
 
   componentDidUpdate(prevProps, prevState) {
@@ -15,26 +15,39 @@ export default class ImageGallery extends Component {
     const currentQuery = this.props.query;
     // const page = 1;
 
-    // this.setState({ loading: true });
-
     if (prevQuery !== currentQuery) {
+      this.setState({ status: 'pending' });
+
       fetch(
         `https://pixabay.com/api/?q=${currentQuery}&page=1&key=${API_KEY}&image_type=photo&orientation=horizontal&per_page=12`
       )
         .then(res => res.json())
-        .then(query => this.setState({ hits: query.hits }));
-      // .finally(() => this.setState({ loading: false }));
+        .then(query => this.setState({ hits: query.hits, status: 'resolved' }));
     }
   }
 
   render() {
-    return (
-      <ul className="gallery">
-        Gallery
-        {/* {this.state.loading && <div>Загружаем...</div>}
-        {!this.props.query && <div>Введите текст</div>} */}
-        <ImageGalleryItem hits={this.state.hits} />
-      </ul>
-    );
+    const { status, hits } = this.state;
+
+    if (status === 'idle') {
+      return <div>Введите текст</div>;
+    }
+
+    if (status === 'pending') {
+      return <div>Загружаем...</div>;
+    }
+
+    if (hits.length < 1) {
+      return <div>Ничего не найдено</div>;
+    }
+
+    if (status === 'resolved') {
+      return (
+        <ul className="gallery">
+          Gallery
+          <ImageGalleryItem hits={this.state.hits} />
+        </ul>
+      );
+    }
   }
 }
