@@ -1,4 +1,5 @@
 import ImageGalleryItem from 'components/ImageGalleryItem/ImageGalleryItem';
+import Loader from 'components/Loader/Loader';
 import { Component } from 'react';
 
 import css from './ImageGallery.module.css';
@@ -20,11 +21,15 @@ export default class ImageGallery extends Component {
     if (prevQuery !== currentQuery) {
       this.setState({ status: 'pending' });
 
-      fetch(
-        `https://pixabay.com/api/?q=${currentQuery}&page=1&key=${API_KEY}&image_type=photo&orientation=horizontal&per_page=12`
-      )
-        .then(res => res.json())
-        .then(query => this.setState({ hits: query.hits, status: 'resolved' }));
+      setInterval(() => {
+        fetch(
+          `https://pixabay.com/api/?q=${currentQuery}&page=1&key=${API_KEY}&image_type=photo&orientation=horizontal&per_page=12`
+        )
+          .then(res => res.json())
+          .then(query =>
+            this.setState({ hits: query.hits, status: 'resolved' })
+          );
+      }, 1500);
     }
   }
 
@@ -36,7 +41,7 @@ export default class ImageGallery extends Component {
     }
 
     if (status === 'pending') {
-      return <div>Загружаем...</div>;
+      return <Loader />;
     }
 
     if (hits.length < 1) {
@@ -46,7 +51,7 @@ export default class ImageGallery extends Component {
     if (status === 'resolved') {
       return (
         <ul className={css.ImageGallery}>
-          <ImageGalleryItem hits={this.state.hits} />
+          <ImageGalleryItem hits={hits} />
         </ul>
       );
     }
