@@ -3,6 +3,7 @@ import { Component } from 'react';
 import { Button } from 'components/Button';
 import ImageGalleryItem from 'components/ImageGalleryItem/ImageGalleryItem';
 import Loader from 'components/Loader/Loader';
+import Modal from 'components/Modal/Modal';
 
 import css from './ImageGallery.module.css';
 
@@ -13,6 +14,7 @@ export default class ImageGallery extends Component {
     status: 'idle',
     totalHits: null,
     page: 1,
+    showModal: false,
   };
 
   componentDidUpdate(prevProps, prevState) {
@@ -61,8 +63,12 @@ export default class ImageGallery extends Component {
     }));
   };
 
+  toggleModal = () => {
+    this.setState(({ showModal }) => ({ showModal: !showModal }));
+  };
+
   render() {
-    const { status, hits, page, totalHits } = this.state;
+    const { status, hits, page, totalHits, showModal } = this.state;
 
     // if (status === 'idle') {
     //   return <div>Введите текст</div>;
@@ -79,6 +85,9 @@ export default class ImageGallery extends Component {
     // if (status === 'resolved') {
     return (
       <div>
+        <button type="button" onClick={this.toggleModal}>
+          Show/Hide modal
+        </button>
         <ul className={css.ImageGallery}>
           <ImageGalleryItem hits={hits} />
         </ul>
@@ -86,6 +95,8 @@ export default class ImageGallery extends Component {
         {totalHits > 12 * page && status === 'resolved' && (
           <Button handlerLoadMore={this.handlerLoadMore} />
         )}
+
+        {showModal && <Modal onClose={this.toggleModal} />}
       </div>
     );
     // }
