@@ -22,6 +22,8 @@ export default class Searchbar extends Component {
     this.setState({ query: '' });
   };
 
+  LoadMore = () => {};
+
   render() {
     return (
       <header className={css.Searchbar}>

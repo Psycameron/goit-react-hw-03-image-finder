@@ -9,6 +9,8 @@ export default class ImageGallery extends Component {
     query: '',
     hits: [],
     status: 'idle',
+    totalHits: null,
+    page: 1,
   };
 
   componentDidUpdate(prevProps, prevState) {
@@ -16,21 +18,48 @@ export default class ImageGallery extends Component {
 
     const prevQuery = prevProps.query;
     const currentQuery = this.props.query;
-    // const page = 1;
+    const page = this.state.page;
 
     if (prevQuery !== currentQuery) {
       this.setState({ status: 'pending' });
 
       fetch(
-        `https://pixabay.com/api/?q=${currentQuery}&page=1&key=${API_KEY}&image_type=photo&orientation=horizontal&per_page=12`
+        `https://pixabay.com/api/?q=${currentQuery}&page=${page}&key=${API_KEY}&image_type=photo&orientation=horizontal&per_page=12`
       )
         .then(res => res.json())
-        .then(query => this.setState({ hits: query.hits, status: 'resolved' }));
+        .then(query =>
+          this.setState({
+            hits: query.hits,
+            status: 'resolved',
+            totalHits: query.totalHits,
+          })
+        );
+      return;
+    }
+
+    if (prevState.page !== this.state.page) {
+      fetch(
+        `https://pixabay.com/api/?q=${currentQuery}&page=${page}&key=${API_KEY}&image_type=photo&orientation=horizontal&per_page=12`
+      )
+        .then(res => res.json())
+        .then(query =>
+          this.setState({
+            hits: query.hits,
+            status: 'resolved',
+          })
+        );
     }
   }
 
+  handlerLoadMore = () => {
+    this.setState(prevState => ({
+      page: prevState.page + 1,
+      hits: [...prevState.hits, ...this.state.hits],
+    }));
+  };
+
   render() {
-    const { status, hits } = this.state;
+    const { status, hits, page, totalHits } = this.state;
 
     if (status === 'idle') {
       return <div>Введите текст</div>;
@@ -46,9 +75,16 @@ export default class ImageGallery extends Component {
 
     if (status === 'resolved') {
       return (
-        <ul className={css.ImageGallery}>
-          <ImageGalleryItem hits={hits} />
-        </ul>
+        <div>
+          <ul className={css.ImageGallery}>
+            <ImageGalleryItem hits={hits} />
+          </ul>
+          {totalHits > 12 * page && (
+            <button type="button" onClick={this.handlerLoadMore}>
+              Load more
+            </button>
+          )}
+        </div>
       );
     }
   }

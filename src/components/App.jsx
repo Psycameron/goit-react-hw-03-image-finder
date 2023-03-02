@@ -5,6 +5,7 @@ import Searchbar from './Searchbar/Searchbar';
 export default class App extends Component {
   state = {
     query: '',
+    totalHits: null,
   };
 
   handleFormSubmit = query => {
@@ -15,7 +16,10 @@ export default class App extends Component {
     return (
       <div>
         <Searchbar onSubmit={this.handleFormSubmit} />
-        <ImageGallery query={this.state.query} />
+        <ImageGallery
+          query={this.state.query}
+          totalHits={this.state.totalHits}
+        />
       </div>
     );
   }
