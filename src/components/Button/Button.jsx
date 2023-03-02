@@ -1,9 +1,9 @@
 import css from './Button.module.css';
 
-export function Button() {
+export function Button({ handlerLoadMore }) {
   return (
-    <button type="button" className={css.Button}>
-      <span>Load more</span>
+    <button type="button" onClick={handlerLoadMore} className={css.Button}>
+      Load more
     </button>
   );
 }

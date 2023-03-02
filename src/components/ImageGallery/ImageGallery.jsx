@@ -1,6 +1,8 @@
+import { Component } from 'react';
+
+import { Button } from 'components/Button';
 import ImageGalleryItem from 'components/ImageGalleryItem/ImageGalleryItem';
 import Loader from 'components/Loader/Loader';
-import { Component } from 'react';
 
 import css from './ImageGallery.module.css';
 
@@ -80,9 +82,7 @@ export default class ImageGallery extends Component {
             <ImageGalleryItem hits={hits} />
           </ul>
           {totalHits > 12 * page && (
-            <button type="button" onClick={this.handlerLoadMore}>
-              Load more
-            </button>
+            <Button handlerLoadMore={this.handlerLoadMore} />
           )}
         </div>
       );
