@@ -15,6 +15,7 @@ export default class ImageGallery extends Component {
     totalHits: null,
     page: 1,
     showModal: false,
+    largeImg: '',
   };
 
   componentDidUpdate(prevProps, prevState) {
@@ -67,6 +68,13 @@ export default class ImageGallery extends Component {
     this.setState(({ showModal }) => ({ showModal: !showModal }));
   };
 
+  handlerModalImage = url => {
+    this.setState(({ showModal }) => ({
+      showModal: !showModal,
+      largeImg: url,
+    }));
+  };
+
   render() {
     const { status, hits, page, totalHits, showModal } = this.state;
 
@@ -85,18 +93,17 @@ export default class ImageGallery extends Component {
     // if (status === 'resolved') {
     return (
       <div>
-        <button type="button" onClick={this.toggleModal}>
-          Show/Hide modal
-        </button>
         <ul className={css.ImageGallery}>
-          <ImageGalleryItem hits={hits} />
+          <ImageGalleryItem hits={hits} onClick={this.handlerModalImage} />
         </ul>
         {status === 'pending' && <Loader />}
         {totalHits > 12 * page && status === 'resolved' && (
           <Button handlerLoadMore={this.handlerLoadMore} />
         )}
 
-        {showModal && <Modal onClose={this.toggleModal} />}
+        {showModal && (
+          <Modal largeImg={this.state.largeImg} onClose={this.toggleModal} />
+        )}
       </div>
     );
     // }

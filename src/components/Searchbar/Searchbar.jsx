@@ -15,7 +15,7 @@ export default class Searchbar extends Component {
     e.preventDefault();
 
     if (this.state.query.trim() === '') {
-      return alert('Vvedute zapros');
+      return alert('Введи запрос для поиска');
     }
 
     this.props.onSubmit(this.state.query);
