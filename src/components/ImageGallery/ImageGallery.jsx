@@ -93,9 +93,16 @@ export default class ImageGallery extends Component {
     // if (status === 'resolved') {
     return (
       <div>
-        <ul className={css.ImageGallery}>
-          <ImageGalleryItem hits={hits} onClick={this.handlerModalImage} />
-        </ul>
+        {totalHits === 0 ? (
+          <div className={css.ImageFail}>
+            <span>По вашему запросу ничего не найдено</span>
+          </div>
+        ) : (
+          <ul className={css.ImageGallery}>
+            <ImageGalleryItem hits={hits} onClick={this.handlerModalImage} />
+          </ul>
+        )}
+
         {status === 'pending' && <Loader />}
         {totalHits > 12 * page && status === 'resolved' && (
           <Button handlerLoadMore={this.handlerLoadMore} />
